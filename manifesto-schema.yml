@@ -1,0 +1,147 @@
+# docs/MANIFESTO.yml — contrato
+#
+# Este arquivo é a fonte única de verdade do conteúdo de negócio do módulo.
+# Todos os .md em docs/ são gerados a partir dele. NUNCA editar os .md direto —
+# editar este YAML e rodar /docs-user <tipo> para regenerar.
+#
+# Campos marcados como "obrigatório" não podem ficar vazios ou com TODO:.
+# Campos marcados como "opcional" podem ser omitidos ou ficar com "Não se aplica".
+
+# ──────────────────────────────────────────────────────────────
+# 1. Identidade do módulo (obrigatório)
+# ──────────────────────────────────────────────────────────────
+modulo:
+  nome_publico: "Bloqueio de Lançamentos por Período"   # usado no título do .md
+  nome_curto: "Bloqueio de Período"                      # usado no corpo
+  descricao: "Impede edição de notas e financeiros em períodos fiscais fechados"
+  package_java: "br.com.lbi.bloqueioperiodo"             # auto-extraído
+
+# ──────────────────────────────────────────────────────────────
+# 2. Perfis de usuário (obrigatório — 2 a 4 perfis)
+# ──────────────────────────────────────────────────────────────
+perfis:
+  - perfil: "Administrador do bloqueio"
+    faz: "Cria regras de bloqueio, ativa/desativa e autoriza liberações individuais"
+  - perfil: "Usuário comum (faturamento, financeiro)"
+    faz: "Só sente o efeito — recebe mensagem de barrado quando tenta salvar"
+  - perfil: "Contador / auditor"
+    faz: "Acompanha pelo monitor de liberações o que foi liberado, por quem e quando"
+
+# ──────────────────────────────────────────────────────────────
+# 3. Telas customizadas (obrigatório se o módulo tem tela própria)
+# ──────────────────────────────────────────────────────────────
+telas:
+  - entidade: "BloqueioLancamentoCfg"                    # auto-extraído do dd/*.xml
+    tabela: "AD_BLOQCFG"                                  # auto-extraído do DDL
+    nome_visivel: "Configurações de Bloqueio"            # PERGUNTAR
+    menu: "Bloqueio de Período → Configurações de Bloqueio"  # PERGUNTAR
+    proposito: "Cadastra e mantém as regras de bloqueio por período"
+    botoes:
+      - classe: "AcaoAtivarBloqueio"                     # auto-extraído
+        rotulo: "Ativar Bloqueio"                        # PERGUNTAR
+      - classe: "AcaoDesativarBloqueio"
+        rotulo: "Desativar Bloqueio"
+      - classe: "AcaoLiberarLancamento"
+        rotulo: "Liberar Nota"
+      - classe: "AcaoLiberarFinanceiro"
+        rotulo: "Liberar Título Financeiro"
+    campos:
+      - coluna: "NUCONFBLOQ"                             # auto-extraído
+        rotulo: "ID Configuração"                        # PERGUNTAR
+        tipo: "NUMERIC"
+        obrigatorio: false
+        auto_gerado: true
+        observacao: "Gerado automaticamente pelo Sankhya"
+      - coluna: "CODEMP"
+        rotulo: "Empresa"
+        tipo: "NUMERIC"
+        obrigatorio: true
+        observacao: "Empresa do ERP a que a regra se aplica"
+      # ... demais campos
+
+# ──────────────────────────────────────────────────────────────
+# 4. Efeitos — o que é bloqueado (obrigatório se o módulo bloqueia algo)
+# ──────────────────────────────────────────────────────────────
+efeitos:
+  bloqueios:
+    - situacao: "Incluir nova nota com data de saída dentro do período"
+      bloqueia: true
+      condicao: "flag BLOQNFE/BLOQCTE/BLOQNFSE = S conforme chave fiscal"
+    - situacao: "Alterar data de saída de nota existente para dentro do período"
+      bloqueia: true
+    - situacao: "Excluir uma nota"
+      bloqueia: false
+      observacao: "Este módulo não bloqueia DELETE"
+  nunca_bloqueia:
+    - "Operações feitas fora do período"
+    - "Operações de outras empresas não cobertas pela regra"
+    - "Documentos com liberação individual concedida"
+    - "Consultas, relatórios e exportações"
+
+# ──────────────────────────────────────────────────────────────
+# 5. Mensagens verbatim (obrigatório — exatamente como aparecem)
+# ──────────────────────────────────────────────────────────────
+mensagens:
+  - situacao: "Lançamento barrado por regra ativa, sem mensagem customizada"
+    texto: "Lançamento bloqueado pelo período '<NOME>' (<DTINI> a <DTFIM>). Solicite a liberação ao responsável."
+    origem: "BloqueioLancamentoHelper.java"
+  - situacao: "Clicou em Liberar Nota sem selecionar regra"
+    texto: "Nenhuma configuração de bloqueio selecionada."
+    origem: "AcaoLiberarLancamento.java"
+  - situacao: "Liberação duplicada"
+    texto: "A nota <NUNOTA> já possui liberação para este bloqueio."
+    origem: "AcaoLiberarLancamento.java"
+
+# ──────────────────────────────────────────────────────────────
+# 6. Cenários de negócio (obrigatório — 2 a 4 cenários)
+# ──────────────────────────────────────────────────────────────
+cenarios:
+  - titulo: "Fechamento fiscal mensal rotineiro"
+    gatilho: "Dia 5 do mês seguinte, contador termina a apuração do SPED"
+    passos:
+      - "Admin cria regra: Fechamento Fiscal Março/2026, datas 01/03 a 31/03, todas as flags S"
+      - "Ativa o bloqueio"
+      - "Usuário do faturamento tenta alterar nota de 15/03 → barrado"
+      - "Se erro real a corrigir: supervisor libera a nota individualmente"
+  - titulo: "Bloqueio apenas fiscal, liberando financeiro"
+    gatilho: "Conciliação bancária ainda em andamento, mas notas fiscais já travadas"
+    passos:
+      - "Criar regra com datas do período"
+      - "Bloqueia CT-e = S, NF-e = S, NFS-e = S"
+      - "Bloqueia Receitas = N, Despesas = N"
+      - "Ativar"
+
+# ──────────────────────────────────────────────────────────────
+# 7. Limitações conhecidas (obrigatório)
+# ──────────────────────────────────────────────────────────────
+limitacoes:
+  - "Não bloqueia exclusão direta via SQL (DELETE) — só operações via tela ou API"
+  - "Não bloqueia DELETE no Sankhya — apenas INSERT e UPDATE"
+  - "Uma regra só cobre uma empresa — duplicar regra para cobrir N empresas"
+
+# ──────────────────────────────────────────────────────────────
+# 8. FAQ (opcional — apenas perguntas reais recebidas)
+# ──────────────────────────────────────────────────────────────
+faq:
+  - pergunta: "O bloqueio vale para operações via integração/API?"
+    resposta: "Sim. Dispara no momento em que o ERP recebe o insert/update, independente da origem. Só não pega alterações feitas direto no banco."
+  - pergunta: "Posso ter múltiplas regras ativas?"
+    resposta: "Sim. Cada regra age independente. Se um documento cai em múltiplas regras, basta uma barrar."
+
+# ──────────────────────────────────────────────────────────────
+# 9. Suporte (obrigatório)
+# ──────────────────────────────────────────────────────────────
+suporte:
+  responsavel_nome: "Igor"
+  responsavel_email: "lbigor@icloud.com"
+  canal_slack: "#logsankhya"
+  logs: "Canal Slack #logsankhya recebe todos os erros automaticamente via lib br.com.lbi.slack"
+
+# ──────────────────────────────────────────────────────────────
+# 10. Metadados (auto-preenchido pela skill — não editar manualmente)
+# ──────────────────────────────────────────────────────────────
+_metadata:
+  schema_version: 1
+  manifesto_criado_em: "2026-04-20"
+  ultima_sync: "2026-04-20"
+  commit_referencia: "abc1234"   # hash do commit quando o manifesto foi sincronizado

@@ -1,0 +1,8 @@
+# Arquivos gerados / locais — não versionar
+.license
+.license-cache
+*.log
+.DS_Store
+
+# PDFs gerados (regeneráveis via scripts/gerar-pdf.sh)
+docs/*.pdf
