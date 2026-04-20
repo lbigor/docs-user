@@ -4,11 +4,25 @@
 
 ---
 
+## 🎁 Trial grátis de 14 dias
+
+Toda nova instalação ganha **14 dias de acesso full (tier comercial)** automaticamente.
+
+Basta rodar o instalador — nenhuma chave, nenhum cartão de crédito.
+
+Após o trial, a skill continua funcionando em **modo domiciliar gratuito** (com aviso nos docs gerados). Para uso empresarial contínuo, contrate o plano por **R$ 10/mês por usuário**.
+
+---
+
 ## ⚠ Aviso de uso
 
-Esta skill é **gratuita para uso domiciliar** (pessoa física, sem fins comerciais).
+| Cenário | Custo |
+|---|---|
+| Uso pessoal / estudo | **Grátis** |
+| Primeiros 14 dias (qualquer uso) | **Grátis** (trial) |
+| Uso empresarial após trial | **R$ 10/mês por usuário ativo** |
 
-Para **uso empresarial**, é cobrada mensalidade de **R$ 10,00 por usuário ativo**. Consulte a [LICENSE.md](./LICENSE.md) para termos completos.
+Consulte a [LICENSE.md](./LICENSE.md) para termos completos.
 
 | Canal comercial | Contato |
 |---|---|
@@ -89,11 +103,27 @@ Quer aparecer aqui? Contrate o plano empresarial e compartilhe seu case.
 | [Pandoc](https://pandoc.org) | ≥ 3.1 | gerar PDF das docs (opcional) |
 | [Typst](https://typst.app) | ≥ 0.12 | engine do PDF (opcional) |
 
-### Instalar a skill
+### Instalar a skill (1 linha)
 
 ```bash
+curl -fsSL https://raw.githubusercontent.com/lbigor/docs-user/main/install.sh | bash
+```
+
+O instalador:
+
+1. Valida pré-requisitos
+2. Clona a skill em `~/.claude/skills/docs-user`
+3. **Ativa o trial de 14 dias automaticamente**
+4. Mostra como usar
+
+### Instalação manual (alternativa)
+
+```bash
+mkdir -p ~/.claude/skills
 cd ~/.claude/skills
-gh repo clone ibl-tec/docs-user
+git clone https://github.com/lbigor/docs-user.git
+chmod +x docs-user/scripts/*.sh docs-user/install.sh
+docs-user/install.sh   # ativa o trial
 ```
 
 Na primeira execução em qualquer projeto, a skill valida a chave de licença e, se for a primeira vez naquele PC, guia o setup do `gh auth login`.

@@ -6,6 +6,20 @@ Esta skill é propriedade da **IBL TEC** e é distribuída sob licença dual:
 
 ---
 
+## 0. Trial gratuito de 14 dias
+
+Toda nova instalação da skill ativa **14 dias de acesso integral (tier comercial)** automaticamente, sem necessidade de cartão, boleto ou cadastro.
+
+Durante o trial:
+
+- Todos os recursos estão liberados (inclusive para uso empresarial)
+- Não há marca d'água promocional nos docs gerados
+- É permitido avaliar a ferramenta em projeto de cliente real
+
+Ao fim dos 14 dias, a chave é automaticamente rebaixada para o tier **doméstico** (ver §1). Para manter uso empresarial, contrate o plano (ver §2).
+
+---
+
 ## 1. Uso Domiciliar (gratuito)
 
 Pessoa física pode usar esta skill **gratuitamente** para:

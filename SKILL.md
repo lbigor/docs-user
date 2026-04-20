@@ -64,8 +64,27 @@ Cada passo é obrigatório e executa nesta ordem. Nenhum pode ser pulado, exceto
 
 Antes de qualquer ação, verificar chave de licença. Sem chave válida, abortar.
 
-1. **Ler chave local** em `~/.claude/skills/docs-user/.license` (arquivo texto simples).
-   - Se não existir, criar com chave `HOME-<hash>` gerada a partir de `git config user.email + hostname`. Uso domiciliar padrão.
+### Tiers suportados
+
+| Tier | Duração | O que libera | Marca nos docs |
+|---|---|---|---|
+| `trial` | 14 dias a partir da instalação | Acesso full (igual commercial) | `Gerado durante trial (faltam N dias)` |
+| `commercial` | Enquanto paga (verificado mensalmente) | Acesso full, sem aviso promocional | Só `Gerado com docs-user v1.0` |
+| `domestic` | Permanente | Acesso full com aviso promocional em cada doc | `Gerado com versão doméstica. Uso empresarial: R$ 10/mês/usuário.` |
+
+### Fluxo
+
+1. **Ler chave local** em `~/.claude/skills/docs-user/.license` (formato `key=...`, `tier=...`, `trial_start=...`, `trial_days=...`, `fingerprint=...`).
+   - Se arquivo não existir: rodar `install.sh` ou criar chave TRIAL manualmente com `tier=trial`, `trial_start=<hoje>`, `trial_days=14`.
+2. **Se `tier=trial`:** calcular dias decorridos desde `trial_start`.
+   - Se `<= 14` dias: prosseguir como commercial. No footer de PR adicionar: `Trial: faltam <N> dias`.
+   - Se `> 14` dias: rebaixar automaticamente para `tier=domestic` (atualizar o arquivo `.license`). Avisar o usuário na tela:
+     ```
+     🎁 Seu trial de 14 dias terminou. A skill continua funcionando em modo doméstico (grátis).
+     Uso empresarial: R$ 10/mês/usuário — (27) 99850-1498 (WhatsApp) · lbigor@icloud.com
+     ```
+3. **Se `tier=commercial`:** tentar validar chave no servidor (passo 4 abaixo). Fallback: usar cache se disponível.
+4. **Se `tier=domestic`:** prosseguir direto — não precisa validar chave (é grátis). Footer dos docs gerados **deve** conter aviso promocional.
 2. **Ler cache** em `~/.claude/skills/docs-user/.license-cache` (JSON: `{key, valid, tier, expira, validado_em}`).
    - Se `validado_em` ≤ 7 dias: cache válido, prosseguir com `tier` cacheado.
 3. **Se cache expirado ou inexistente:** validar contra servidor IBL TEC.
