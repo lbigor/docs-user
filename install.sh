@@ -1,27 +1,25 @@
 #!/usr/bin/env bash
 # install.sh — Instalador one-liner da skill docs-user
-# © 2026 IBL TEC · Licença dual (ver LICENSE.md)
+# MIT · 2026 · Igor Lima (ver LICENSE.md)
 #
 # Uso:
 #   curl -fsSL https://raw.githubusercontent.com/lbigor/docs-user/main/install.sh | bash
 #
 # O que faz:
-#   1. Verifica pré-requisitos (git, gh, claude CLI)
+#   1. Verifica pré-requisitos (git, Claude Code CLI)
 #   2. Clona/atualiza a skill em ~/.claude/skills/docs-user
 #   3. Torna scripts executáveis
-#   4. Cria chave TRIAL de 14 dias automaticamente
-#   5. Exibe instruções de uso
+#   4. Exibe instruções de uso
 
 set -euo pipefail
 
 SKILLS_DIR="${HOME}/.claude/skills"
 SKILL_DIR="${SKILLS_DIR}/docs-user"
 REPO_URL="https://github.com/lbigor/docs-user.git"
-TRIAL_DAYS=14
 
 echo ""
 echo "════════════════════════════════════════════════════"
-echo "  docs-user · Instalador  ·  © 2026 IBL TEC"
+echo "  docs-user · Instalador  ·  MIT 2026 Igor Lima"
 echo "════════════════════════════════════════════════════"
 echo ""
 
@@ -56,37 +54,6 @@ fi
 chmod +x "$SKILL_DIR/scripts/"*.sh 2>/dev/null || true
 chmod +x "$SKILL_DIR/install.sh" 2>/dev/null || true
 
-# ── Chave TRIAL ─────────────────────────────────────────
-LICENSE_FILE="$SKILL_DIR/.license"
-
-if [ ! -f "$LICENSE_FILE" ]; then
-  FINGERPRINT=$(git config --global user.email 2>/dev/null || echo "anon")
-  FINGERPRINT="${FINGERPRINT}@$(hostname)"
-  FP_HASH=$(echo "$FINGERPRINT" | shasum -a 256 | cut -c1-8)
-  TRIAL_START=$(date -u +%Y-%m-%d)
-
-  cat > "$LICENSE_FILE" <<EOF
-# Chave de licença — docs-user
-# NÃO compartilhar. Arquivo ignorado pelo git.
-key=TRIAL-${FP_HASH}
-tier=trial
-trial_start=${TRIAL_START}
-trial_days=${TRIAL_DAYS}
-fingerprint=${FINGERPRINT}
-EOF
-
-  echo ""
-  echo "🎁  Trial gratuito de ${TRIAL_DAYS} dias ativado!"
-  echo "    Início: ${TRIAL_START}"
-  echo "    Tier:   commercial (acesso full)"
-  echo ""
-  echo "    Após o trial, a skill continua funcionando em modo"
-  echo "    domiciliar (grátis) com aviso nos docs gerados."
-  echo ""
-  echo "    Uso empresarial: R\$ 10/mês por usuário."
-  echo "    Contratar: (27) 99850-1498 (WhatsApp) · lbigor@icloud.com"
-fi
-
 # ── Instalado ───────────────────────────────────────────
 echo ""
 echo "════════════════════════════════════════════════════"
@@ -105,5 +72,6 @@ echo "  • $SKILL_DIR/docs/MANUAL_SKILL.pdf"
 echo ""
 echo "Comunidade & suporte:"
 echo "  • GitHub: https://github.com/lbigor/docs-user"
-echo "  • WhatsApp IBL TEC: (27) 99850-1498"
+echo "  • Discussions: https://github.com/lbigor/docs-user/discussions"
+echo "  • Consultoria opcional: (27) 99850-1498 (WhatsApp)"
 echo ""

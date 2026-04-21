@@ -5,7 +5,7 @@
 #let conf(
   title: none,
   subtitle: none,
-  author: "IBL TEC",
+  author: "Igor Lima",
   date: datetime.today().display(),
   version: "1.0.0",
   doc,
@@ -21,12 +21,12 @@
     header: context {
       if counter(page).get().first() > 1 [
         #set text(size: 8pt, fill: gray)
-        #title #h(1fr) docs-user · IBL TEC
+        #title #h(1fr) docs-user · MIT
       ]
     },
     footer: context [
       #set text(size: 8pt, fill: gray)
-      © 2026 IBL TEC · Licença dual · v#version
+      MIT · 2026 · Igor Lima · v#version
       #h(1fr)
       Página #counter(page).display() / #counter(page).final().first()
     ],
@@ -95,8 +95,8 @@
 
     #v(1fr)
     #text(size: 8pt, fill: gray)[
-      © 2026 IBL TEC — Licença dual (domiciliar grátis / comercial R$ 10/mês/usuário) \
-      Contato: lbigor\@icloud.com · (27) 99850-1498 (WhatsApp)
+      MIT · 2026 · Igor Lima — github.com/lbigor/docs-user \
+      Consultoria opcional: lbigor\@icloud.com · (27) 99850-1498 (WhatsApp)
     ]
   ]
 

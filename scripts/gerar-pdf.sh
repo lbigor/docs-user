@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # gerar-pdf.sh — Gera PDF determinístico do manual da skill docs-user
-# © 2026 IBL TEC · Licença dual (ver LICENSE.md)
+# MIT · 2026 · Igor Lima (ver LICENSE.md)
 #
 # Uso:
 #   ./scripts/gerar-pdf.sh [caminho_md] [caminho_pdf]
