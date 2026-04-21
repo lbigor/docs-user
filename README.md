@@ -1,5 +1,8 @@
 # docs-user
 
+[![Discussions](https://img.shields.io/github/discussions/lbigor/docs-user)](https://github.com/lbigor/docs-user/discussions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.md)
+
 > Skill para o Claude Code que gera e mantém documentação padronizada de projetos **Sankhya ERP** — com rastreio automático no GitHub.
 
 ---
