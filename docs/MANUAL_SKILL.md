@@ -1,16 +1,23 @@
 ---
 title: "docs-user — Manual Oficial"
 subtitle: "Geração padronizada de documentação para projetos Sankhya ERP"
-author: "IBL TEC"
-date: "2026-04-20"
+author: "Igor Lima"
+date: "2026-04-21"
 lang: pt-BR
 version: "1.0.0"
 ---
 
 # docs-user — Manual Oficial
 
-> **⚠ Aviso de licença** — Esta skill é gratuita para uso domiciliar. Uso empresarial: **R$ 10/mês por usuário**.
-> Contato comercial: **(27) 99850-1498** (WhatsApp) · **lbigor@icloud.com** · IBL TEC.
+> **⚠ Manual em reestruturação** — Esta versão do PDF foi renderizada no modelo
+> comercial legado (com validação de chave e cobrança mensal). A skill migrou
+> para **licença MIT open source**. Seções 6, 7 e 11 referentes a licença
+> comercial, chaves, cache da IBL TEC e fluxo de cobrança **não se aplicam mais**.
+> Regenerar com `./scripts/gerar-pdf.sh` após `/docs-user manual` na próxima
+> sessão atualiza o conteúdo.
+>
+> **Licença atual:** MIT · 2026 · Igor Lima — livre para qualquer uso.
+> **Consultoria opcional:** lbigor@icloud.com · (27) 99850-1498 (WhatsApp).
 
 ---
 

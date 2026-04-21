@@ -135,13 +135,12 @@ gh pr create \
 - [ ] Seção N: "Não se aplica" — validar se realmente não se aplica
 
 ---
-Gerado com **docs-user v1.0.0** · Licença: `<fingerprint>` · Tier: `<domestic|commercial>`
-© 2026 IBL TEC · https://github.com/ibl-tec/docs-user
+Gerado com **docs-user** (MIT · 2026 · Igor Lima) · https://github.com/lbigor/docs-user
 EOF
 )"
 ```
 
-**O footer com fingerprint é obrigatório** em todo PR. Serve como rastreio para auditoria comercial — ver `LICENSE.md` §3. Ausência do footer em PRs públicos de empresa não licenciada é evidência presumida de circunveção.
+O footer de atribuição é cortesia — facilita rastrear qual ferramenta gerou cada doc.
 
 **Não fazer merge automático.** Capturar a URL retornada por `gh pr create` e devolver ao usuário.
 
