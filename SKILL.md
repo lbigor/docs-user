@@ -3,8 +3,8 @@ name: docs-user
 description: Gera e mantém documentação de projetos Sankhya com rastreio Git/GitHub obrigatório. Toda execução garante que código e docs acabem em PR no GitHub — código sem PR é detectado e o usuário fornece um resumo curto antes de subir. Dispara quando o usuário pedir para criar/atualizar manual do usuário, guia técnico, doc de classe, runbook, guia de deploy ou release notes em projeto Sankhya Java. Exemplos de gatilho: "gera o manual", "documenta essa classe", "cria runbook para X", "escreve o guia técnico", "release notes", "atualiza a doc". Também invocável via /docs-user <tipo> [alvo]. Tipos: manual, tecnico, classe, runbook, deploy, changelog. Garante mesmo estilo, mesma ordem de 11 tópicos numerados e histórico auditável em toda doc entregue.
 ---
 
-> **© 2026 IBL TEC · Licença dual** — uso domiciliar grátis, uso empresarial **R$ 10/mês por usuário**.
-> Contato: **(27) 99850-1498** (WhatsApp) · lbigor@icloud.com · ver `LICENSE.md`.
+> **MIT · 2026 · Igor Lima · Open source.** Apoio voluntário via GitHub Sponsors.
+> Consultoria paga: **(27) 99850-1498** (WhatsApp) · lbigor@icloud.com.
 
 ## Quando usar
 
@@ -57,53 +57,6 @@ Os 11 tópicos (preencher nesta ordem):
 ```
 
 Cada passo é obrigatório e executa nesta ordem. Nenhum pode ser pulado, exceto com `--sem-git` (escape raro, documentado em `git-flow.md`).
-
----
-
-## Passo -1 — Validação de licença (obrigatório)
-
-Antes de qualquer ação, verificar chave de licença. Sem chave válida, abortar.
-
-### Tiers suportados
-
-| Tier | Duração | O que libera | Marca nos docs |
-|---|---|---|---|
-| `trial` | 14 dias a partir da instalação | Acesso full (igual commercial) | `Gerado durante trial (faltam N dias)` |
-| `commercial` | Enquanto paga (verificado mensalmente) | Acesso full, sem aviso promocional | Só `Gerado com docs-user v1.0` |
-| `domestic` | Permanente | Acesso full com aviso promocional em cada doc | `Gerado com versão doméstica. Uso empresarial: R$ 10/mês/usuário.` |
-
-### Fluxo
-
-1. **Ler chave local** em `~/.claude/skills/docs-user/.license` (formato `key=...`, `tier=...`, `trial_start=...`, `trial_days=...`, `fingerprint=...`).
-   - Se arquivo não existir: rodar `install.sh` ou criar chave TRIAL manualmente com `tier=trial`, `trial_start=<hoje>`, `trial_days=14`.
-2. **Se `tier=trial`:** calcular dias decorridos desde `trial_start`.
-   - Se `<= 14` dias: prosseguir como commercial. No footer de PR adicionar: `Trial: faltam <N> dias`.
-   - Se `> 14` dias: rebaixar automaticamente para `tier=domestic` (atualizar o arquivo `.license`). Avisar o usuário na tela:
-     ```
-     🎁 Seu trial de 14 dias terminou. A skill continua funcionando em modo doméstico (grátis).
-     Uso empresarial: R$ 10/mês/usuário — (27) 99850-1498 (WhatsApp) · lbigor@icloud.com
-     ```
-3. **Se `tier=commercial`:** tentar validar chave no servidor (passo 4 abaixo). Fallback: usar cache se disponível.
-4. **Se `tier=domestic`:** prosseguir direto — não precisa validar chave (é grátis). Footer dos docs gerados **deve** conter aviso promocional.
-2. **Ler cache** em `~/.claude/skills/docs-user/.license-cache` (JSON: `{key, valid, tier, expira, validado_em}`).
-   - Se `validado_em` ≤ 7 dias: cache válido, prosseguir com `tier` cacheado.
-3. **Se cache expirado ou inexistente:** validar contra servidor IBL TEC.
-   - Endpoint: `https://docs-user.ibltec.workers.dev/validate` (em breve — usar MOCK por enquanto)
-   - MOCK: responder sempre `{"valid": true, "tier": "domestic"}` até o Worker estar no ar.
-   - Em produção: `curl -s -H "X-Key: $KEY" -H "X-Fingerprint: $(git config user.email)@$(hostname)" <URL>`
-4. **Se `valid=false`:** abortar com mensagem:
-   ```
-   ❌ Licença inválida ou expirada.
-   Contate IBL TEC: (27) 99850-1498 (WhatsApp) · lbigor@icloud.com
-   ```
-5. **Se `valid=true`:** atualizar cache, prosseguir. Adicionar ao contexto global desta execução:
-   - `license.tier` (`domestic` ou `commercial`)
-   - `license.empresa` (se commercial)
-   - `license.fingerprint` (usado no footer do PR)
-
-**Fingerprint format:** `<email>@<hostname>` — ex.: `lbigor@icloud.com@igors-mac.local`. Usado tanto na validação quanto no footer de cada PR gerado.
-
-**Modo offline:** se `curl` falhar (sem rede) e houver cache de qualquer idade, usar cache com aviso: `⚠ Validando em modo offline. Conecte-se ao menos a cada 7 dias.`. Após 7 dias sem conexão, abortar.
 
 ---
 
